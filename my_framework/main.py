@@ -50,11 +50,13 @@ class BaseApp:
         return [body.encode('utf-8')]
 
     @staticmethod
-    def decode_data(data):
+    def decode_data(data: dict) -> dict:
         """
-        Функция принимает словарь с данными POST-запроса
-        и переводит в байты с помощью функции decodestring библиотеки quopri
-        :param data: данные в байтах
+        Принимает словарь с данными POST-запроса,
+        переводит в байты с помощью функции bytes, затем
+        передает функции decodestring библиотеки quopri,
+        а затем декодирует в utf-8
+        :param data: словарь
         :return:
         """
         decoded_data = {}
