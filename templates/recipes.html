@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}
+textured_stars_light
+{% endblock %}
+{% block style %}
+{% include "inc-style.html" %}
+{% endblock %}
+{% block meta %}
+{% include "inc-meta.html" %}
+{% endblock %}
+{% block header %}
+{% include "inc-header.html" %}
+{% endblock %}
+{% block sidebar %}
+{% include "inc-sidebar.html" %}
+{% endblock %}
+{% block content %}
+<div id="content">
+  <!-- insert the page content here -->
+    <h1>Наша поваренная книга</h1>
+    <p>Здесь можно ознакомиться со списком рецептов, доступных на данном ресурсе. Каждый из них полностью соответствует общей концепции, которую вы видите в верхней части страницы.</p>
+    <h2>Избранное</h2>
+    <p>В эту категорию попадают рецепты, набравшие максимальное число положительных отзывов от посетителей нашего сайта. Уровень заголовка понижается вместе с рейтингом блюда:</p>
+    <h1>Яичница</h1>
+    <p>
+      Это блюдо действительно не имеет себе равных по соотношению эффективность/уровень интеллекта,
+      требуемого для приготовления. Однако и здесь существуют свои нюансы, не зная которых можно
+      испортить даже яичницу.
+    </p>
+    <a href="#">Подробный рецепт</a>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+    <h4>Heading 4</h4>
+    <h5>Heading 5</h5>
+    <h6>Heading 6</h6>
+    <h2>Images</h2>
+    <p>images can be placed on the left, in the center or on the right:</p>
+    <span class="left"><img src="style/graphic.png" alt="example graphic" /></span>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+      incididunt.
+    </p>
+    <span class="center"><img src="style/graphic.png" alt="example graphic" /></span>
+    <span class="right"><img src="style/graphic.png" alt="example graphic" /></span>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna aliqua.
+    </p>
+    <h2>Прочие рецепты</h2>
+    <p>Изучите полный список блюд нашего меню:</p>
+    <table style="width:100%; border-spacing:0;">
+      <tr><th>Рецепт</th><th>Кухня </th></tr>
+      <tr><td>Item 1</td><td>Диетические блюда</td></tr>
+      <tr><td>Item 2</td><td>Спортивное питание</td></tr>
+      <tr><td>Item 3</td><td>Усиленное питание</td></tr>
+      <tr><td>Item 4</td><td>Десерты</td></tr>
+    </table>
+    <h2>Предложите свой рецепт</h2>
+    <form action="#" method="post">
+      <div class="form_settings">
+        <p><span>Название блюда</span><input type="text" name="name" value="" /></p>
+        <p><span>Как приготовить</span><textarea rows="8" cols="50" name="name"></textarea></p>
+        <p><span>Вы это придумали сами?</span><input class="checkbox" type="checkbox" name="name" value="" /></p>
+        <p><span>Кухня</span><select id="id" name="name"><option value="1">Example 1</option><option value="2">Examp</option></select></p>
+        <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="name" value="Отправить" /></p>
+      </div>
+    </form>
+</div>
+{% endblock %}
+{% block footer %}
+{% include "inc-footer.html" %}
+{% endblock %}

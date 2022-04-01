@@ -16,7 +16,7 @@ def render(template_name, folder='templates', **kwargs):
 
     # Загрузчик можно передать в блок __init__
     # класса Environment при создании экземпляра.
-    # По умолнчанию атрибут loader=None
+    # По умолчанию атрибут loader=None
 
     # loader = FileSystemLoader(folder)
     # env = Environment(loader=loader)

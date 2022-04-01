@@ -1,5 +1,6 @@
 import datetime
-from views import Index, About, Contact, Examples, AnotherPage, Page
+from views import Index, Contact, CoursesList, CreateCourse, CategoryList, \
+    CreateCategory, StudyPrograms, RecipesPage, About
 
 
 # блок FC
@@ -15,9 +16,12 @@ fronts = [first_front, second_front]
 
 routes = {
     '/': Index(),
-    '/about/': About(),
     '/contact/': Contact(),
-    '/examples/': Examples(),
-    '/another_page/': AnotherPage(),
-    '/page/': Page(),
+    '/about/': About(),
+    '/recipes_page/': RecipesPage(),
+    '/course_list/': CoursesList(),
+    '/create_course/': CreateCourse(),
+    '/categories_list/': CategoryList(),
+    '/create_category/': CreateCategory(),
+    '/study_programs/': StudyPrograms(),
 }

@@ -61,7 +61,9 @@ class BaseApp:
         """
         decoded_data = {}
         for k, v in data.items():
+            key = bytes(k.replace('%', '=').replace('+', " "), 'utf-8')
             val = bytes(v.replace('%', '=').replace('+', " "), 'utf-8')
-            decoded_str = quopri.decodestring(val).decode('utf-8')
-            decoded_data[k] = decoded_str
+            key_decoded_str = quopri.decodestring(key).decode('utf-8')
+            val_decoded_str = quopri.decodestring(val).decode('utf-8')
+            decoded_data[key_decoded_str] = val_decoded_str
         return decoded_data
