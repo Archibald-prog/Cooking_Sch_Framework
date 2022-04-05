@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+список_категорий
+{% endblock %}
+{% block style %}
+{% include "inc-style.html" %}
+{% endblock %}
+{% block meta %}
+{% include "inc-meta.html" %}
+{% endblock %}
+{% block header %}
+{% include "inc-header.html" %}
+{% endblock %}
+{% block sidebar %}
+{% include "inc-sidebar.html" %}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <a href="/">назад</a>
+
+    <div>
+		<a href="/create_category/">Создать новую категорию</a>
+	</div>
+	<div>
+		<h1>Список существующих категорий</h1>
+        {% for item in objects_list %}
+        <li>
+            {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
+			<a href="/course_list/?id={{item.id}}">Показать курсы</a>
+        </li>
+        {% endfor %}
+	</div>
+
+</div>
+{% endblock %}
+{% block footer %}
+{% include "inc-footer.html" %}
+{% endblock %}
