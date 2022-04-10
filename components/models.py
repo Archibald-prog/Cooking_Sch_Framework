@@ -1,9 +1,12 @@
 import quopri
+from copy import deepcopy
+from components.behavioral_patterns import FileWriter, Subject
 
 
 # Класс "Абстрактный пользователь"
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Teacher(User):
@@ -11,7 +14,9 @@ class Teacher(User):
 
 
 class Student(User):
-    pass
+    def __init__(self, name):
+        self.courses = []
+        super().__init__(name)
 
 
 # Класс "Фабрика пользователей"
@@ -22,14 +27,20 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
+    def create(cls, type_, name):
         # возвращаем объект кл. Student или Teacher
         # в зависимости от переданного аргумента
-        return cls.types[type_]()
+        return cls.types[type_](name)
+
+
+# Прототип - Курс
+class CoursePrototype:
+    def clone(self):
+        return deepcopy(self)
 
 
 # Класс-Курс
-class Course:
+class Course(CoursePrototype, Subject):
 
     def __init__(self, name, category):
         self.name = name
@@ -37,6 +48,16 @@ class Course:
         # Добавляем объект кл. Course
         # в список курсов данной категории
         self.category.courses.append(self)
+        self.students = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.students[item]
+
+    def add_student(self, student):
+        self.students.append(student)
+        student.courses.append(self)
+        self.notify()
 
 
 # Класс-Интерактивный курс
@@ -91,8 +112,8 @@ class Engine:
         self.categories = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
 
     @staticmethod
     # аргумент category передаем,
@@ -119,8 +140,41 @@ class Engine:
                 return item
         return None
 
+    def get_student(self, name):
+        for item in self.students:
+            if item.name == name:
+                return item
+
     @staticmethod
     def decode_value(val):
         val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
         val_decode_str = quopri.decodestring(val_b)
         return val_decode_str.decode('UTF-8')
+
+
+class SingletonByName(type):
+    def __init__(cls, name, bases, attrs, **kwargs):
+        super().__init__(name, bases, attrs)
+        cls.__instance = {}
+
+    def __call__(cls, *args, **kwargs):
+        if args:
+            name = args[0]
+        if kwargs:
+            name = kwargs['name']
+
+        if name in cls.__instance:
+            return cls.__instance[name]
+        else:
+            cls.__instance[name] = super().__call__(*args, **kwargs)
+            return cls.__instance[name]
+
+
+class Logger(metaclass=SingletonByName):
+    def __init__(self, name, writer=FileWriter()):
+        self.name = name
+        self.writer = writer
+
+    def log(self, text):
+        text = f'log---> {text}'
+        self.writer.write(text)

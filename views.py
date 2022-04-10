@@ -1,9 +1,15 @@
-from my_framework.templator import render
-from components.models import Engine
 from datetime import date
+
+from my_framework.templator import render
+from components.models import Engine, Logger
 from components.structural_patterns import AppRoute, Debug
+from components.behavioral_patterns import ListView, CreateView, TemplateView, \
+    EmailNotifier, BaseSerializer, SmsNotifier, ConsoleWriter, FileWriter
 
 site = Engine()
+logger = Logger('main', ConsoleWriter())
+email_notifier = EmailNotifier()
+sms_notifier = SmsNotifier()
 routes = {}
 
 
@@ -41,7 +47,6 @@ class NotFound404:
 @AppRoute(routes=routes, url='/course_list/')
 class CoursesList:
     def __call__(self, request):
-
         try:
             category = site.find_category_by_id(
                 int(request['request_params']['id']))
@@ -63,9 +68,7 @@ class CreateCourse:
 
     def __call__(self, request):
         if request['method'] == 'POST':
-
             data = request['data']
-
             name = data['name']
             name = site.decode_value(name)
 
@@ -74,6 +77,10 @@ class CreateCourse:
                 category = site.find_category_by_id(int(self.category_id))
 
                 course = site.create_course('record', name, category)
+
+                course.observers.append(email_notifier)
+                course.observers.append(sms_notifier)
+
                 site.courses.append(course)
 
             return '200 OK', render('course_list.html',
@@ -92,6 +99,54 @@ class CreateCourse:
                                         id=category.id)
             except KeyError:
                 return '200 OK', 'No categories have been added yet'
+
+# Страница "Список студентов" - CBV
+@AppRoute(routes=routes, url='/student_list/')
+class StudentListView(ListView):
+    queryset = site.students
+    template_name = 'student_list.html'
+
+# Страница "Создать студента" - CBV
+@AppRoute(routes=routes, url='/create_student/')
+class StudentCreateView(CreateView):
+    template_name = 'create_student.html'
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = site.decode_value(name)
+        new_obj = site.create_user('student', name)
+        site.students.append(new_obj)
+
+# Страница "Добавление студента на курс"
+@AppRoute(routes=routes, url='/add_student/')
+class AddStudentToCourse(CreateView):
+    template_name = 'add_student.html'
+
+    def get_context_data(self):
+        # берем метод из род. класса
+        # и получаем пустой словарь
+        context = super().get_context_data()
+        # создаем в словаре ключи 'courses' и 'students'
+        # значение ключа берем из движка Engine
+        context['courses'] = site.courses
+        context['students'] = site.students
+        return context
+
+    def create_obj(self, data: dict):
+        course_name = data['course_name']
+        course_name = site.decode_value(course_name)
+        course = site.get_course(course_name)
+        student_name = data['student_name']
+        student_name = site.decode_value(student_name)
+        student = site.get_student(student_name)
+        course.add_student(student)
+
+
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    @Debug(name='CourseApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.courses).save()
 
 
 # Страница "Создать категорию"
@@ -124,24 +179,22 @@ class CreateCategory:
                                     )
 
 
-# "Список категорий"
+# Список категорий CBV
 @AppRoute(routes=routes, url='/categories_list/')
-class CategoryList:
-    def __call__(self, request):
-        return '200 OK', render('categories_list.html',
-                                objects_list=site.categories)
+class CategoryList(ListView):
+    queryset = site.categories
+    template_name = 'categories_list.html'
 
 
-# Страница "Контакты"
+# Страница "Контакты" CBV
 @AppRoute(routes=routes, url='/contact/')
-class Contact:
-    def __call__(self, request):
-        return '200 OK', render('contact.html', datetime=request.get('datetime', None))
+class Contact(TemplateView):
+    template_name = 'contact.html'
 
-# Страница "Рецепты"
+
+# Страница "Рецепты" - CBV
 @AppRoute(routes=routes, url='/recipes_page/')
-class RecipesPage:
-    def __call__(self, request):
-        return '200 OK', render('recipes.html', datetime=request.get('datetime', None))
+class RecipesPage(TemplateView):
+    template_name = 'recipes.html'
 
 
