@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+список_курсов
+{% endblock %}
+{% block style %}
+{% include "inc-style.html" %}
+{% endblock %}
+{% block meta %}
+{% include "inc-meta.html" %}
+{% endblock %}
+{% block header %}
+{% include "inc-header.html" %}
+{% endblock %}
+{% block sidebar %}
+{% include "inc-sidebar.html" %}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <div>
+        <a href="/">назад на главную</a>
+    </div>
+
+    <br>
+    <br>
+
+    <div>
+        <a href="/create_course/?id={{id}}">Создать новый курс</a>
+        <br>
+        <h1>Список курсов для категории "{{name}}"</h1>
+        {% for item in objects_list %}
+        <li>
+            {{item.name}}
+        </li>
+        {% endfor %}
+        <br>
+        <h1>Полный список курсов</h1>
+        {% for item in full_course_list %}
+        <li>
+            {{item.name}} - Категория: {{item.category.name}}
+        </li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% include "inc-footer.html" %}
+{% endblock %}
