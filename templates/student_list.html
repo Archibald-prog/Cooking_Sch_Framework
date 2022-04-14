@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}
+контактная информация
+{% endblock %}
+{% block style %}
+{% include "inc-style.html" %}
+{% endblock %}
+{% block meta %}
+{% include "inc-meta.html" %}
+{% endblock %}
+{% block header %}
+{% include "inc-header.html" %}
+{% endblock %}
+{% block sidebar %}
+{% include "inc-sidebar.html" %}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <div>
+		<li>
+			<a href="/create_student/">Создать студента</a>
+		</li>
+		<li>
+			<a href="/add_student/">Добавить студента на курс</a>
+		</li>
+	</div>
+    <h1>Список студентов</h1>
+    <div>
+
+        {% for item in objects_list %}
+        <li>
+            {{item.name}}
+            {% for course in item.courses %}
+                {{course.name}}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% include "inc-footer.html" %}
+{% endblock %}
